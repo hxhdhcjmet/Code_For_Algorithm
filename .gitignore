@@ -424,3 +424,5 @@ yarn-error.log*
 *.obj
 *.exe
 *.out
+#.vscode
+.vscode/
