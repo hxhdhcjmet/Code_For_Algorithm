@@ -127,20 +127,20 @@ class BinarySearchTree{
         }else{
             parrent->rchild=temp;
         }
-        return;
+        return;//左子树为空，直接把右子树接过去
     }else if(current->lchild!=nullptr){
         TreeNode *temp=current->lchild;
         TreeNode *tempparrent=current;
         while(temp->rchild!=nullptr){
             tempparrent=temp;
             temp=temp->rchild;
-        }
+        }//左不为空，右沉到最大值
         if(tempparrent==current){
             tempparrent->lchild=temp->lchild;
         }
         else{
             tempparrent->rchild=temp->lchild;
-        }
+        }//temp即为找到的右最大值，是要用来代替被删除的元素
         temp->lchild=current->lchild;
         temp->rchild=current->rchild;
         if(parrent==nullptr){
@@ -161,12 +161,12 @@ class BinarySearchTree{
     
 };
 int main(){
-    vector<int> val={5,3,7,2,4,6,8};
+    vector<int> val={4,5,9,8,3,2};
     BinarySearchTree pi;
     pi.buildTree(val);
     pi.inorder(pi.root);
     cout<<endl;
-    pi.deleteNode(7);
+    pi.deleteNode(2);
     pi.inorder(pi.root);
     return 0;
 }
