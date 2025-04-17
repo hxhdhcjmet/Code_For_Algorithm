@@ -18,6 +18,16 @@ class RecursiveTravel{//递归实现
         if(temp==nullptr) return 0;
         return max(maxDeepth(temp->lchild),maxDeepth(temp->rchild))+1;
     }
+    int minDeepth(TreeNode*temp){//递归计算最小深度
+        if(temp==nullptr) return 0;
+        if(temp->lchild==nullptr){//左子树为空，只用递归右边即可
+            return 1+minDeepth(temp->rchild);
+        }
+        if(temp->rchild==nullptr){//右为空，只用递归左边即可
+            return 1+minDeepth(temp->lchild);
+        }
+        return min(minDeepth(temp->lchild),minDeepth(temp->rchild))+1;//左右均不为空
+    }
 
 };
 class NonRecursiveTravel{//非递归实现
@@ -82,6 +92,56 @@ class NonRecursiveTravel{//非递归实现
         }
         return result;
     }
+    TreeNode*flipTree(TreeNode*root){//翻转树，非递归使用队列或栈均可
+        if(!root) return nullptr;//空直接返回nullptr
+        stack<TreeNode*> st;
+        st.push(root);
+        while(!st.empty()){
+            TreeNode *temp=st.top();
+            st.pop();
+            swap(temp->lchild,temp->rchild);
+            if(temp->lchild) st.push(temp->lchild);
+            if(temp->rchild) st.push(temp->rchild);//这里压栈顺序无所谓；
+        }
+        return root;
+    }
+    int nonRecursivemaxDeepth(TreeNode*root){
+        if(!root) return 0;
+        queue<TreeNode*> que;
+        que.push(root);
+        int deepth=0;
+        while(!que.empty()){
+            deepth++;
+            int times=que.size();
+            for(int i=0;i<times;i++){
+                TreeNode *temp=que.front();
+                que.pop();
+                if(temp->lchild) que.push(temp->lchild);
+                if(temp->rchild) que.push(temp->rchild);
+            }
+        }
+        return deepth;
+    }
+    int nonRecursiveminDeepth(TreeNode*temp){
+        if(!temp) return 0;
+        queue<TreeNode*> q;
+        q.push(temp);
+        int mindeep=0;
+        while(!q.empty()){
+            mindeep++;
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                TreeNode*current=q.front();
+                q.pop();
+                if(current->lchild==nullptr&&current->rchild==nullptr){
+                    return mindeep;
+                }
+                if(current->lchild) q.push(current->lchild);
+                if(current->rchild) q.push(current->rchild);
+            }
+        }
+        return mindeep;
+    }
 
 
 };
@@ -134,6 +194,15 @@ class BinaryTree:public RecursiveTravel,public NonRecursiveTravel{
         }
         cout<<endl;
     }
+    void FlipTree(){
+        root=flipTree(root);
+    }
+    int deepth(){
+        return nonRecursivemaxDeepth(root);
+    }
+    int minDeepth(){
+        return nonRecursiveminDeepth(root);
+    }
 };
 int main(){
     BinaryTree pi;
@@ -142,6 +211,8 @@ int main(){
     pi.nonrecursiveInorderTravel();
     pi.nonrecursivePostorder();
     pi.BFs();
+    cout<<" the max deepth of the tree is:"<<pi.deepth()<<endl;
+    cout<<"the min deepth of the tree is:"<<pi.minDeepth();
     return 0;
 
 }
