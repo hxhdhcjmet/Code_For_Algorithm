@@ -1,7 +1,49 @@
 #include<iostream>
 #include<vector>
+#include<random>
 using namespace std;
-void insertSort(vector<int>& test){//插入排序
+const int len=20;//定义向量大小为1000
+class GetRecord{
+    public:
+    vector<int> record;
+    GetRecord(){
+        record.resize(len,0);
+    }
+    void positiveOrder(){
+        for(int i=0;i<len;i++){//获得正序
+            record[i]=i;
+        }
+    }
+    void reserveOrder(){//获得逆序
+        for(int i=0;i<len;i++){
+            record[i]=len-i-1;
+        }
+    }
+    void randomOrder(){
+        srand(time(0));
+        for(int i=0;i<len;i++){
+            record[i]=rand()%1000;//范围为0~999
+        }
+        
+    }
+    void randomOrderbett(){
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(0,len-1);//均匀整数分布
+        //normal_distribution 正态分布
+        for(int& arr:record){
+            arr=dis(gen);
+        }
+    }
+    void printRecord(){
+        for(auto it=record.begin();it<record.end();it++){
+            cout<<*it<<"\t";
+        }
+        cout<<endl;
+    }
+
+};
+/*void insertSort(vector<int>& test){//插入排序
     int n=test.size();
     for(int i=1;i<n;i++){
         int j=i-1;
@@ -10,13 +52,20 @@ void insertSort(vector<int>& test){//插入排序
             j--;
         }
     }
-}
-void printResult(vector<int> test){
-    for(auto it=test.begin();it<test.end();it++){
-        cout<<*it<<" ";
+}*/
+void insertSort(vector<int>& record){//插入排序
+    int n=record.size();
+    for(int i=1;i<n;i++){
+        int key=record[i];
+        int j=i-1;
+        while(j>=0&&record[j]>key){
+            record[j+1]=record[j];
+            j--;
+        }
+        record[j+1]=key;
     }
-    cout<<endl;
 }
+
 void chooseSort(vector<int>& test){//选择排序
     int n=test.size();
     for(int i=0;i<n;i++){
@@ -43,9 +92,17 @@ void bubbleSort(vector<int>& test){
         if(!isSwap) break;
     }
 }
+void printresult(vector<int>& record){
+    int n=record.size();
+    for(int i=0;i<n;i++){
+        cout<<record[i]<<"\t";
+    }
+    cout<<endl;
+}
 int main(){
-    vector<int> example={3,2,6,7,1,8,9};
-    bubbleSort(example);
-    printResult(example);
+    GetRecord test;
+    test.randomOrder();
+    insertSort(test.record);
+    printresult(test.record);
     return 0;
 }
